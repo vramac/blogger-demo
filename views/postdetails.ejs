@@ -1,0 +1,36 @@
+<!doctype html>
+<html>
+<head>
+    <title>Blogger</title>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+    <style>
+        body         { padding-top:80px; }
+    </style>
+</head>
+<body>
+<div class="container">
+<div class="col-sm-6 col-sm-offset-3">
+
+
+     <div class="page-header text-center">
+        <h1><span class="fa fa-user"></span><%= post.content %></h1>
+        <a href="/blog/<%= post.blogId%>" class="btn btn-default btn-sm">View Posts</a>
+        <a href="/profile" class="btn btn-default btn-sm">Profile</a>
+        <a href="/logout" class="btn btn-default btn-sm">Logout</a>
+    </div>
+
+     <% if (typeof message !== 'undefined' && message.length > 0) { %>
+        <div class="alert alert-danger"><%= message %></div>
+    <% } %>
+   
+    <div class="well">
+           <p>
+                <strong>Content: </strong>: <%= post.content %><br>
+            </p>    
+    </div>
+
+</div>
+</div>
+</body>
+</html>
