@@ -29,6 +29,13 @@
         </div>
         <div class="form-group">
             <label>Image</label>
+
+            <% if (post.image) { %>
+            </br>
+            <img src="<%= image%>"/>
+            </br>
+            </br>
+            <% } %>
             <input type="file" class="form-control" name="image" accept="image/*">
         </div>
         

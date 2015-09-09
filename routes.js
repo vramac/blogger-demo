@@ -4,6 +4,7 @@ let multiparty = require('multiparty')
 let Blog = require('./models/blog')
 let Post = require('./models/post')
 let Comment = require('./models/comment')
+let DataUri = require('datauri')
 let util = require('util');
 
 require('songbird')
@@ -70,10 +71,16 @@ module.exports = (app) => {
 
       if (!post) 
         res.send('404','not Found')
+
+      let datauri = new DataUri
+      let image = datauri.format('.'+ 
+        post.image.contentType.split('/').pop(),post.image.data)
+
       console.log("Found a match PostId: " + postId + ", post: " + post) 
       res.render('post.ejs',{
         post: post,
-        verb: 'Edit'
+        verb: 'Edit',
+        image: `data:${post.image.contentType};base64,${image.base64}`
       })
     }
   }))
@@ -102,17 +109,22 @@ module.exports = (app) => {
     post.title = title
     post.content = content
     await post.save()
-    res.redirect('/blog/:blogId' + encodeURI(post.blogId))
+    res.redirect('/blog/' + encodeURI(post.blogId))
   }))
 
-  app.get('/postDetails/:postId', then(async(req,res) => {
+  app.get('/postDetails/:postId?', then(async(req,res) => {
     let postId = req.params.postId
+    console.log("Found a match PostId: " + postId)
     let post = await Post.promise.findById(postId)
     let comments = await Comment.promise.find({postId:postId})
-    console.log("Found a match PostId: " + postId + ", post: " + post) 
+    let datauri = new DataUri
+    let image = datauri.format('.'+ 
+        post.image.contentType.split('/').pop(),post.image.data)
+    console.log("Found a match PostId: " + postId + ", image: " + image) 
     res.render('postdetails.ejs',{
       post: post,
-      comments: comments
+      comments: comments,
+      image: `data:${post.image.contentType};base64,${image.base64}`
     })
   }))
 
