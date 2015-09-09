@@ -1,8 +1,9 @@
 let fs = require('fs')
 let then = require('express-then')
 let multiparty = require('multiparty')
-let Post = require('./models/post')
 let Blog = require('./models/blog')
+let Post = require('./models/post')
+let Comment = require('./models/comment')
 let util = require('util');
 
 require('songbird')
@@ -104,13 +105,28 @@ module.exports = (app) => {
     res.redirect('/blog/:blogId' + encodeURI(post.blogId))
   }))
 
-  app.get('/postdetails/:postId', then(async(req,res) => {
+  app.get('/postDetails/:postId', then(async(req,res) => {
     let postId = req.params.postId
     let post = await Post.promise.findById(postId)
+    let comments = await Comment.promise.find({postId:postId})
     console.log("Found a match PostId: " + postId + ", post: " + post) 
     res.render('postdetails.ejs',{
-      post: post
+      post: post,
+      comments: comments
     })
+  }))
+
+  app.post('/postComments/:postId', then(async(req,res) => {
+    let postId = req.params.postId
+    let comment = new Comment()
+    comment.postId = postId
+    comment.userId = req.user.username
+    let content = req.body.content
+    comment.content = content
+    console.log("Comments: " + content)
+    await comment.save();
+    let comments = await Comment.promise.find({postId:postId})
+    res.redirect('/postDetails/' + encodeURI(postId))
   }))
 
   app.get('/logout', (req, res) => {
