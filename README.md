@@ -20,6 +20,8 @@ Time spent: `20 hours`
 
 Walkthrough
 
-Video Walkthrough
+![Video Walkthrough](blogger-demo1.gif)
+
+![Video Walkthrough](blogger-demo2.gif)
 
 
